@@ -1,6 +1,6 @@
 /build/
 /dist/
-/src/*.egg-info/
+/where_to.egg-info/
 
 .pytest_cache/
 
