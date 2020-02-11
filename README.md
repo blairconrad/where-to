@@ -3,7 +3,7 @@
 where-to is a [Python](https://www.python.org/) command-line utility that
 displays upcoming Outlook appointments on a Windows lock screen.
 
-The package is [available on pypi](https://pypi.org/project/wehre-to/) and can
+The package is [available on pypi](https://pypi.org/project/where-to/) and can
 be installed from the command line by typing
 
 ```
