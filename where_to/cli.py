@@ -171,16 +171,11 @@ def calculate_lock_size(screen_size):
         (768, 1280),
     ]
 
-    desired_ratio = float(screen_size[0]) / screen_size[1]
-
     for possible_screen_size in logon_screen_dimensions:
-        possible_ratio = float(possible_screen_size[0]) / possible_screen_size[1]
-
-        if possible_ratio < desired_ratio:
+        if possible_screen_size[0] * screen_size[1] == possible_screen_size[1] * screen_size[0]:
             return possible_screen_size
 
-    return logon_screen_dimensions[-1]
-    #    raise Exception("Can't figure out the best lock screen size for " + str(screen_size))
+    return logon_screen_dimensions[0]
 
 
 def create_bottom_layer(lock_size, config):
@@ -275,7 +270,7 @@ def change_logon_background(image):
     if not os.path.exists(logon_background_dir):
         os.makedirs(logon_background_dir)
 
-    logon_background_path = os.path.join(logon_background_dir, "backgrounddefault.jpg")
+    logon_background_path = os.path.join(logon_background_dir, "background%dx%d.jpg" % image.size)
     quality = 80
     with Windows.disable_file_system_redirection():
         while quality > 0:
