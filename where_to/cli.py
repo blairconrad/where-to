@@ -67,7 +67,6 @@ def main(args=None):
     appointments = find_appointments(args.which, now)
     if not appointments:
         print("No appointments found!")
-        return
 
     if args.display_mode == "list":
         for appointment in appointments:
@@ -214,6 +213,9 @@ def resize_to_fit(image, container_size):
 
 
 def create_image(appointments, background, config):
+    if not appointments:
+        return background
+
     font_size = 16
     font = ImageFont.truetype("verdana.ttf", font_size)
 
@@ -273,7 +275,7 @@ def change_logon_background(image):
     if not os.path.exists(logon_background_dir):
         os.makedirs(logon_background_dir)
 
-    logon_background_path = os.path.join(logon_background_dir, "background%dx%d.jpg" % image.size)
+    logon_background_path = os.path.join(logon_background_dir, "backgrounddefault.jpg")
     quality = 80
     with Windows.disable_file_system_redirection():
         while quality > 0:
