@@ -9,10 +9,10 @@ repository = "https://github.com/blairconrad/where-to.git"
 
 
 [tool.poetry.scripts]
-where-to = "where_to.cli:main"
+where-to-console = "where_to.cli:main"
 
 [tool.poetry.plugins."gui_scripts"]
-where-to-no-console = "where_to.cli:main"
+where-to = "where_to.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
