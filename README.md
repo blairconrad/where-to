@@ -24,6 +24,14 @@ where-to now      # appointments starting between 10 minutes ago and 15  minutes
 
 Get more help via `where-to --help`.
 
+Note that `where-to` is built to be console-less, so that when invoked from a Windows scheduled
+task it will not pop up an annoying console window. The help message (and indeed all output)
+should be presented in an instance of the notepad editor. If this isn't working, or if for some
+reason you want to see a display in a terminal window, the alternative executable `where-to-console`
+is also available. This can be combined with the `--display-mode list` option to print appointments
+rather than splash them on the lock screen.
+
+
 ----
 Logo: [Calendar](https://thenounproject.com/paisley.299/uploads/?i=1968675) by
 [Paisley](https://thenounproject.com/paisley.299/) from
