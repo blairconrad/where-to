@@ -12,12 +12,12 @@ try:
     import Image
     import ImageDraw
     import ImageFont
-except:
+except ImportError:
     try:
         from PIL import Image
         from PIL import ImageDraw
         from PIL import ImageFont
-    except:
+    except ImportError:
         raise Exception("Can't import PIL or PILLOW. Install one.")
 
 
@@ -84,9 +84,7 @@ def do_main(args):
         type=str,
         help="The background to overlay messages on. Only useful in 'lock' mode.",
     )
-    parser.add_argument(
-        "--now", type=datetime.datetime.fromisoformat, help=argparse.SUPPRESS
-    )
+    parser.add_argument("--now", type=datetime.datetime.fromisoformat, help=argparse.SUPPRESS)
 
     args = parser.parse_args(args)
 
@@ -139,9 +137,7 @@ class Windows:
 
 def find_appointments(which, now):
     earliest_meeting_start = now + datetime.timedelta(minutes=-10)
-    latest_meeting_start = datetime.datetime(
-        year=now.year, month=now.month, day=now.day
-    ) + datetime.timedelta(days=1)
+    latest_meeting_start = datetime.datetime(year=now.year, month=now.month, day=now.day) + datetime.timedelta(days=1)
 
     if which == "now":
         latest_meeting_start = now + datetime.timedelta(minutes=15)
@@ -160,12 +156,8 @@ def find_appointments(which, now):
     appointments = list(
         [
             appointment
-            for appointment in resolve_recurring_appointments(
-                appointments.Restrict(filter), now
-            )
-            if earliest_meeting_start
-            <= appointment.Start.replace(tzinfo=None)
-            <= latest_meeting_start
+            for appointment in resolve_recurring_appointments(appointments.Restrict(filter), now)
+            if earliest_meeting_start <= appointment.Start.replace(tzinfo=None) <= latest_meeting_start
         ]
     )
 
@@ -181,12 +173,10 @@ def resolve_recurring_appointments(appointments, now):
             yield appointment
 
         try:
-            filter = appointment.Start.replace(
-                year=now.year, month=now.month, day=now.day
-            )
+            filter = appointment.Start.replace(year=now.year, month=now.month, day=now.day)
             appointment = appointment.GetRecurrencePattern().GetOccurrence(filter)
             yield appointment
-        except:
+        except Exception:
             pass
 
 
@@ -208,10 +198,7 @@ def calculate_lock_size(screen_size):
     ]
 
     for possible_screen_size in logon_screen_dimensions:
-        if (
-            possible_screen_size[0] * screen_size[1]
-            == possible_screen_size[1] * screen_size[0]
-        ):
+        if possible_screen_size[0] * screen_size[1] == possible_screen_size[1] * screen_size[0]:
             return possible_screen_size
 
     return logon_screen_dimensions[0]
@@ -241,14 +228,12 @@ def resize_to_fit(image, container_size):
     if image.size[0] / image.size[1] < container_size[0] / container_size[1]:
         # image is skinnier than container
         return image.resize(
-            (int(container_size[1] * image.size[0] / image.size[1]), container_size[1]),
-            Image.BILINEAR,
+            (int(container_size[1] * image.size[0] / image.size[1]), container_size[1]), Image.BILINEAR,
         )
     else:
         # image is fatter than container
         return image.resize(
-            (container_size[0], int(container_size[0] * image.size[1] / image.size[0])),
-            Image.BILINEAR,
+            (container_size[0], int(container_size[0] * image.size[1] / image.size[0])), Image.BILINEAR,
         )
 
 
@@ -260,9 +245,7 @@ def create_image(appointments, background, config):
     font = ImageFont.truetype("verdana.ttf", font_size)
 
     messages = [
-        datetime.datetime.strftime(appointment.Start, "%H:%M")
-        + " "
-        + appointment.Location
+        datetime.datetime.strftime(appointment.Start, "%H:%M") + " " + appointment.Location
         for appointment in appointments
     ]
 
@@ -301,12 +284,7 @@ def get_font_color_from_pixel(background_color):
     v = 1 if hsv[2] <= 0.5 else 0
 
     rgb = colorsys.hsv_to_rgb(h, s, v)
-    rgb = (
-        "#"
-        + hex(int(0xFF * rgb[0]))[2:]
-        + hex(int(0xFF * rgb[1]))[2:]
-        + hex(int(0xFF * rgb[2]))[2:]
-    )
+    rgb = "#" + hex(int(0xFF * rgb[0]))[2:] + hex(int(0xFF * rgb[1]))[2:] + hex(int(0xFF * rgb[2]))[2:]
     return rgb
 
 
@@ -322,9 +300,7 @@ def change_logon_background(image):
     if not os.path.exists(logon_background_dir):
         os.makedirs(logon_background_dir)
 
-    logon_background_path = os.path.join(
-        logon_background_dir, "background%dx%d.jpg" % image.size
-    )
+    logon_background_path = os.path.join(logon_background_dir, "background%dx%d.jpg" % image.size)
     quality = 80
     with Windows.disable_file_system_redirection():
         while quality > 0:
