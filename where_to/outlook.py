@@ -28,8 +28,14 @@ def resolve_recurring_appointments(appointments, today):
         if not appointment.IsRecurring:
             yield appointment
 
+        recurrences = appointment.GetRecurrencePattern()
+
         try:
             filter = appointment.Start.replace(year=today.year, month=today.month, day=today.day)
-            yield appointment.GetRecurrencePattern().GetOccurrence(filter)
+            yield recurrences.GetOccurrence(filter)
         except Exception:
             pass
+
+        for exception in recurrences.Exceptions:
+            if not exception.Deleted:
+                yield exception.AppointmentItem

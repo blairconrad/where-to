@@ -1,7 +1,11 @@
+### Fixed
+- Exceptions to recurring appointments not shown ([#6](https://github.com/blairconrad/where-to/pull/6))
+
 ### Additional Items
 - Add `test` task, invoked by `poetry run task test`
 - Modularize the code a little
 - Download get-poetry to `TEMP` directory on AppVeyor
+
 
 ## 0.3.1-alpha.7
 
