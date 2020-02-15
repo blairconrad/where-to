@@ -1,3 +1,5 @@
+## 0.3.1-alpha.7
+
 ### Additional Items
 - Use HTTP Basic authentication for PyPi
 - Have poetry publish without interaction

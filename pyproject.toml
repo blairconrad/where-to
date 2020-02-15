@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "where-to"
-version = "0.3.1-alpha.6"
+version = "0.3.1-alpha.7"
 description = "Show upcoming Outlook meetings on the Windows lock screen"
 authors = ["Blair Conrad <blair@blairconrad.com>"]
 license = "MIT"
