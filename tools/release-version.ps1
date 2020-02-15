@@ -3,6 +3,30 @@ Param (
     [string]$NewVersion = $(throw "NewVersion is required")
 )
 
+
+Function Replace {
+    [CmdletBinding()]
+    param (
+        [string]$File,
+        [string]$Pattern,
+        [string]$Replacement
+    )
+
+    $newContent = @()
+    $content = Get-Content -Encoding UTF8 $File
+    $content | ForEach-Object {
+        if ($_ -match $Pattern) {
+            $newContent += $Replacement
+        }
+        else {
+            $newContent += $_
+        }
+    }
+
+
+    Set-Content -Path $File -Encoding Ascii -Value ($newContent -join "`r`n").Trim()
+}
+
 $ErrorActionPreference = "Stop"
 Push-Location $PSScriptRoot.Parent
 
@@ -27,14 +51,8 @@ try {
     $releaseNotesContent = ("## $NewVersion`r`n`r`n" + $releaseNotesContent)
     [System.IO.File]::WriteAllText($releaseNotesFile, $releaseNotesContent)
 
-    $versionContent = [System.IO.File]::ReadAllText($versionFile)
-    $versionContent = $versionContent -replace '^__version__ = "[^"]+"', "__version__ = `"$NewVersion`""
-    [System.IO.File]::WriteAllText($versionFile, $versionContent)
-
-    $pyProjectContent = [System.IO.File]::ReadAllText($pyProjectTomlFile)
-    $pyProjectContent = $pyProjectContent -replace '^version = "[^"]+"', "version = `"$NewVersion`""
-    [System.IO.File]::WriteAllText($pyProjectTomlFile, $pyProjectContent)
-
+    Replace -File $versionFile -Pattern '^__version__ = "[^"]+"$' -Replacement "__version__ = `"$NewVersion`""
+    Replace -File $pyProjectTomlFile -Pattern '^version = "[^"]+"$' -Replacement "version = `"$NewVersion`""
 
     Write-Host "`r`nReleasing version $NewVersion. Changing this stuff:`r`n"
     git diff
