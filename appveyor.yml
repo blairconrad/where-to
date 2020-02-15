@@ -1,0 +1,29 @@
+branches:
+    only:
+        - /^(appveyor|master|[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*(-.+)?)$/
+
+environment:
+  global:
+    POETRY_PYPI_TOKEN_PYPI:
+      secure: J+5tu/AWvyehVNQwvvCOW47umtrfS/f94KY2GLIM1ME6oHz8gNxJhqTUG7Urcqrcf2/yzujD5/6Spy9n5ju7xYIjUVaGwCboPHihn5EjaJ8VPrRV3nFBj6YgwrsdvbCBrCONCHbAmqdtbdnT9c5HeNWN+pJg0/YWmY+Hn4Rq1Qz+3ONd+qkL7jUQOUmh1iMwk23qZDuA42cUbtxKKBMo7/JA/UuzsYpJxnvxMUFEKNyDcvDoH9r2gyBAI3BccfG3lkk0kZVAT663jAvq60zQww==
+    GITHUB_TOKEN:
+      secure: NkRTbxNsAxDMqdJgT0pHOb44GIWCBGHHJV5bSHylCQfFh3zDCrEhCgTylAbLeEhe
+
+install:
+  - "SET PATH=%USERPROFILE%\\.poetry\\bin;C:\\Python37-x64;C:\\Python37-x64\\Scripts;%PATH%"
+  - appveyor DownloadFile https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py 
+  - python get-poetry.py --yes
+
+build_script:
+  - poetry install --no-root
+  - poetry build
+
+test_script:
+  - poetry run pytest --flake8 --black tests
+
+deploy_script:
+  - ps: ./tools/deploy.ps1
+
+artifacts:
+  # Archive the generated packages in the ci.appveyor.com build report.
+  - path: dist/*
