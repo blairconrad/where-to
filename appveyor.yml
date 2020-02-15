@@ -4,7 +4,8 @@ branches:
 
 environment:
   global:
-    POETRY_PYPI_TOKEN_PYPI:
+    POETRY_HTTP_BASIC_PYPI_USERNAME: __token__
+    POETRY_HTTP_BASIC_PYPI_PASSWORD:
       secure: J+5tu/AWvyehVNQwvvCOW47umtrfS/f94KY2GLIM1ME6oHz8gNxJhqTUG7Urcqrcf2/yzujD5/6Spy9n5ju7xYIjUVaGwCboPHihn5EjaJ8VPrRV3nFBj6YgwrsdvbCBrCONCHbAmqdtbdnT9c5HeNWN+pJg0/YWmY+Hn4Rq1Qz+3ONd+qkL7jUQOUmh1iMwk23qZDuA42cUbtxKKBMo7/JA/UuzsYpJxnvxMUFEKNyDcvDoH9r2gyBAI3BccfG3lkk0kZVAT663jAvq60zQww==
     GITHUB_TOKEN:
       secure: NkRTbxNsAxDMqdJgT0pHOb44GIWCBGHHJV5bSHylCQfFh3zDCrEhCgTylAbLeEhe

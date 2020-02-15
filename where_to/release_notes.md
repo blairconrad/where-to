@@ -1,3 +1,6 @@
+### Additional Items
+- Use HTTP Basic authentication for PyPi
+
 ## 0.3.1-alpha.4
 
 ### Additional Items
