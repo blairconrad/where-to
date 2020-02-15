@@ -28,11 +28,11 @@ try {
     [System.IO.File]::WriteAllText($releaseNotesFile, $releaseNotesContent)
 
     $versionContent = [System.IO.File]::ReadAllText($versionFile)
-    $versionContent = $versionContent -replace '^__version__ = "[^"]+"$', "__version__ = `"$NewVersion`""
+    $versionContent = $versionContent -replace '^__version__ = "[^"]+"', "__version__ = `"$NewVersion`""
     [System.IO.File]::WriteAllText($versionFile, $versionContent)
 
     $pyProjectContent = [System.IO.File]::ReadAllText($pyProjectTomlFile)
-    $pyProjectContent = $pyProjectContent -replace '^version = "[^"]+"$', "version = `"$NewVersion`""
+    $pyProjectContent = $pyProjectContent -replace '^version = "[^"]+"', "version = `"$NewVersion`""
     [System.IO.File]::WriteAllText($pyProjectTomlFile, $pyProjectContent)
 
 
