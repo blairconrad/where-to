@@ -83,7 +83,7 @@ try {
     }
 
     Write-Output "Publishing package to PyPi"
-    & poetry publish --no-interaction
+    & poetry publish --username $env:POETRY_HTTP_BASIC_PYPI_USERNAME --password $env:POETRY_HTTP_BASIC_PYPI_PASSWORD
 
     Write-Output "Finished deploying $releaseName"
 }
