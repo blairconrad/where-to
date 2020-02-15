@@ -83,7 +83,7 @@ try {
     }
 
     Write-Output "Publishing package to PyPi"
-    & poetry publish
+    & poetry publish --no-interaction
 
     Write-Output "Finished deploying $releaseName"
 }

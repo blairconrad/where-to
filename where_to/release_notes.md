@@ -1,4 +1,6 @@
-## 0.3.1-alpha.3
+### Additional Items
+- Have poetry publish without interaction
+
 
 ## 0.3.1-alpha.2
 
