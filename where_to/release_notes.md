@@ -1,13 +1,5 @@
-## 0.3.1-alpha.6
-
-## 0.3.1-alpha.5
-
 ### Additional Items
 - Use HTTP Basic authentication for PyPi
-
-## 0.3.1-alpha.4
-
-### Additional Items
 - Have poetry publish without interaction
 
 

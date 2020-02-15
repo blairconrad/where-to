@@ -1,6 +1,3 @@
-echo $env:POETRY_HTTP_BASIC_PYPI_USERNAME
-echo $env:POETRY_HTTP_BASIC_PYPI_PASSWORD
-
 if (! $env:APPVEYOR_REPO_TAG_NAME) {
     Write-Output "No Appveyor tag name supplied. Not deploying."
     return
@@ -85,8 +82,9 @@ try {
         Write-Output "Uploaded  $($asset.name)"
     }
 
+    $ErrorActionPreference = "Continue"
     Write-Output "Publishing package to PyPi"
-    & poetry publish --username $env:POETRY_HTTP_BASIC_PYPI_USERNAME --password $env:POETRY_HTTP_BASIC_PYPI_PASSWORD
+    & poetry publish --no-interaction
 
     Write-Output "Finished deploying $releaseName"
 }
