@@ -1,3 +1,6 @@
+echo $env:POETRY_HTTP_BASIC_PYPI_USERNAME
+echo $env:POETRY_HTTP_BASIC_PYPI_PASSWORD
+
 if (! $env:APPVEYOR_REPO_TAG_NAME) {
     Write-Output "No Appveyor tag name supplied. Not deploying."
     return
