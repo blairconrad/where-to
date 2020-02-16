@@ -39,6 +39,9 @@ exclude = '''
 )
 '''
 
+[tool.taskipy.tasks]
+test = "pytest --black --flake8"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

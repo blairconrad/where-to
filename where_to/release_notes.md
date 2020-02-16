@@ -1,4 +1,5 @@
 ### Additional Items
+- Add `test` task, invoked by `poetry run task test`
 - Modularize the code a little
 - Download get-poetry to `TEMP` directory on AppVeyor
 
