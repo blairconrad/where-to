@@ -1,3 +1,6 @@
+### Additional Items
+- Modularize the code a little
+
 ## 0.3.1-alpha.7
 
 ### Additional Items
