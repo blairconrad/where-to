@@ -12,8 +12,8 @@ environment:
 
 install:
   - "SET PATH=%USERPROFILE%\\.poetry\\bin;C:\\Python37-x64;C:\\Python37-x64\\Scripts;%PATH%"
-  - appveyor DownloadFile https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py 
-  - python get-poetry.py --yes
+  - appveyor DownloadFile https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -FileName %TEMP%\\get-poetry.py
+  - python %TEMP%\\get-poetry.py --yes
 
 build_script:
   - poetry install --no-root

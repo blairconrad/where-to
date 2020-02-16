@@ -1,5 +1,6 @@
 ### Additional Items
 - Modularize the code a little
+- Download get-poetry to `TEMP` directory on AppVeyor
 
 ## 0.3.1-alpha.7
 
