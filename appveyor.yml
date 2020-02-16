@@ -20,7 +20,7 @@ build_script:
   - poetry build
 
 test_script:
-  - poetry run pytest --flake8 --black tests
+  - poetry run task test
 
 deploy_script:
   - ps: ./tools/deploy.ps1
