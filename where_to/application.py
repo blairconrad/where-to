@@ -1,14 +1,13 @@
 import colorsys
 import datetime
 import os
-import win32com
-import win32com.client
 
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
 from .windows import Windows
+from . import outlook
 
 
 class Application:
@@ -41,40 +40,12 @@ class Application:
         if self.config.which == "now":
             latest_meeting_start = self.now + datetime.timedelta(minutes=15)
 
-        OUTLOOK_FOLDER_CALENDAR = 9
-
-        filter_early = datetime.datetime.strftime(earliest_meeting_start, "%Y-%m-%d %H:%M")
-        filter_late = datetime.datetime.strftime(latest_meeting_start, "%Y-%m-%d %H:%M")
-
-        filter = f"[MessageClass]='IPM.Appointment' AND [Start] >= '{filter_early}' AND [Start] <= '{filter_late}'"
-
-        outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
-        appointments = outlook.GetDefaultFolder(OUTLOOK_FOLDER_CALENDAR).Items
-        appointments.IncludeRecurrences = True
-
-        appointments = list(
-            [
-                appointment
-                for appointment in self.resolve_recurring_appointments(appointments.Restrict(filter))
-                if earliest_meeting_start <= appointment.Start.replace(tzinfo=None) <= latest_meeting_start
-            ]
-        )
+        appointments = outlook.find_appointments_between(earliest_meeting_start, latest_meeting_start)
 
         if self.config.which == "next":
             appointments = [a for a in appointments if a.Start == appointments[0].Start]
 
         return sorted(appointments, key=lambda a: a.Start)
-
-    def resolve_recurring_appointments(self, appointments):
-        for appointment in appointments:
-            if not appointment.IsRecurring:
-                yield appointment
-
-            try:
-                filter = appointment.Start.replace(year=self.now.year, month=self.now.month, day=self.now.day)
-                yield appointment.GetRecurrencePattern().GetOccurrence(filter)
-            except Exception:
-                pass
 
     def calculate_lock_size(self, screen_size):
 
