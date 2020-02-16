@@ -1,4 +1,3 @@
-import colorsys
 import datetime
 import os
 
@@ -6,8 +5,9 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-from .windows import Windows
+from . import image
 from . import outlook
+from .windows import Windows
 
 
 class Application:
@@ -27,9 +27,11 @@ class Application:
         else:
             screen_size = Windows.get_screen_size()
             lock_size = self.calculate_lock_size(screen_size)
-            bottom_layer = self.create_bottom_layer(lock_size)
-            image = self.create_image(appointments, bottom_layer)
-            self.change_logon_background(image)
+            bottom_layer = image.create_background(
+                lock_size, self.config.background_color, self.config.background_image
+            )
+            lock_image = self.create_image(appointments, bottom_layer)
+            self.change_lock_screen(lock_image)
 
     def find_appointments(self):
         earliest_meeting_start = self.now + datetime.timedelta(minutes=-10)
@@ -70,37 +72,6 @@ class Application:
 
         return logon_screen_dimensions[0]
 
-    def create_bottom_layer(self, lock_size):
-        i = Image.new("RGB", lock_size, self.config.background_color)
-
-        if self.config.background_image:
-            orig = Image.open(self.config.background_image)
-            stamp = self.resize_to_fit(orig, lock_size)
-            if stamp.size == lock_size:
-                return stamp
-
-            i.paste(stamp, (0, i.size[1] - stamp.size[1]))
-
-        return i
-
-    def resize_to_fit(self, image, container_size):
-        if image.size == container_size:
-            return image
-
-        if image.size[0] * container_size[1] == image.size[1] * container_size[0]:
-            return image.resize(container_size, Image.BILINEAR)
-
-        if image.size[0] / image.size[1] < container_size[0] / container_size[1]:
-            # image is skinnier than container
-            return image.resize(
-                (int(container_size[1] * image.size[0] / image.size[1]), container_size[1]), Image.BILINEAR
-            )
-        else:
-            # image is fatter than container
-            return image.resize(
-                (container_size[0], int(container_size[0] * image.size[1] / image.size[0])), Image.BILINEAR
-            )
-
     def create_image(self, appointments, background):
         if not appointments:
             return background
@@ -126,7 +97,7 @@ class Application:
         else:
             overlay = Image.new("RGB", (max_width, total_height), self.config.background_color)
             mask = None
-            font_color = self.get_font_color_from_pixel(overlay.getpixel((0, 0)))
+            font_color = image.get_font_color_from_pixel(overlay.getpixel((0, 0)))
 
         draw = ImageDraw.Draw(overlay)
 
@@ -139,18 +110,7 @@ class Application:
 
         return background
 
-    def get_font_color_from_pixel(self, background_color):
-        rgb = [c / 0xFF for c in background_color]
-        hsv = colorsys.rgb_to_hsv(*rgb)
-        h = hsv[0] + 0.5 if hsv[0] < 0.5 else hsv[0] - 0.5
-        s = hsv[1]
-        v = 1 if hsv[2] <= 0.5 else 0
-
-        rgb = colorsys.hsv_to_rgb(h, s, v)
-        rgb = "#" + hex(int(0xFF * rgb[0]))[2:] + hex(int(0xFF * rgb[1]))[2:] + hex(int(0xFF * rgb[2]))[2:]
-        return rgb
-
-    def change_logon_background(self, image):
+    def change_lock_screen(self, lock_image):
         # change the logon UI background if on Windows 7. From learning at
         # http://www.withinwindows.com/2009/03/15/windows-7-to-officially-support-logon-ui-background-customization/
         if not Windows.is_windows_7():
@@ -162,11 +122,11 @@ class Application:
         if not os.path.exists(logon_background_dir):
             os.makedirs(logon_background_dir)
 
-        logon_background_path = os.path.join(logon_background_dir, "background%dx%d.jpg" % image.size)
+        logon_background_path = os.path.join(logon_background_dir, "background%dx%d.jpg" % lock_image.size)
         quality = 80
         with Windows.disable_file_system_redirection():
             while quality > 0:
-                image.save(logon_background_path, "JPEG", quality=quality)
+                lock_image.save(logon_background_path, "JPEG", quality=quality)
                 file_size = os.path.getsize(logon_background_path)
                 if file_size < 256 * 1000:
                     break
