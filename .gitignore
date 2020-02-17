@@ -1,5 +1,6 @@
 /build/
 /dist/
+/test_output/
 /where_to.egg-info/
 
 .pytest_cache/
