@@ -6,3 +6,7 @@ class Appointment:
         self.Start = datetime.fromisoformat(start)
         self.Subject = subject
         self.Location = location
+
+
+def console(*lines):
+    return "\n".join(lines) + "\n"
