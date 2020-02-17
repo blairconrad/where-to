@@ -41,11 +41,12 @@ class Application:
             latest_meeting_start = self.now + datetime.timedelta(minutes=15)
 
         appointments = outlook.find_appointments_between(earliest_meeting_start, latest_meeting_start)
+        appointments = sorted(appointments, key=lambda a: a.Start)
 
         if self.config.which == "next":
             appointments = [a for a in appointments if a.Start == appointments[0].Start]
 
-        return sorted(appointments, key=lambda a: a.Start)
+        return appointments
 
     def create_image(self, appointments, background):
         if not appointments:
