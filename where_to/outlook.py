@@ -17,24 +17,35 @@ def find_appointments_between(earliest_meeting_start, latest_meeting_start):
     return list(
         [
             appointment
-            for appointment in resolve_recurring_appointments(appointments.Restrict(filter), earliest_meeting_start)
+            for appointment in resolve_recurring_appointments(
+                appointments.Restrict(filter), earliest_meeting_start, latest_meeting_start
+            )
             if earliest_meeting_start <= appointment.Start.replace(tzinfo=None) <= latest_meeting_start
         ]
     )
 
 
-def resolve_recurring_appointments(appointments, today):
+def resolve_recurring_appointments(appointments, earliest_meeting_start, latest_meeting_start):
+    meeting_days = set()
+    latest_day = latest_meeting_start.date()
+    day = earliest_meeting_start.date()
+
+    while day <= latest_day:
+        meeting_days.add(day)
+        day += datetime.timedelta(days=1)
+
     for appointment in appointments:
         if not appointment.IsRecurring:
             yield appointment
 
         recurrences = appointment.GetRecurrencePattern()
 
-        try:
-            filter = appointment.Start.replace(year=today.year, month=today.month, day=today.day)
-            yield recurrences.GetOccurrence(filter)
-        except Exception:
-            pass
+        for day in meeting_days:
+            try:
+                filter = appointment.Start.replace(year=day.year, month=day.month, day=day.day)
+                yield recurrences.GetOccurrence(filter)
+            except Exception:
+                pass
 
         for exception in recurrences.Exceptions:
             if not exception.Deleted:
