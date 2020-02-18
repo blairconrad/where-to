@@ -6,6 +6,7 @@
 - Add `test` task, invoked by `poetry run task test`
 - Modularize the code a little
 - Download get-poetry to `TEMP` directory on AppVeyor
+- Add characterization tests for lock mode ([#8](https://github.com/blairconrad/where-to/pull/8))
 
 
 ## 0.3.1-alpha.7
