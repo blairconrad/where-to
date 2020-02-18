@@ -1,3 +1,5 @@
+## 0.3.1
+
 ### Fixed
 - `next` option doesn't always get next meeting ([#2](https://github.com/blairconrad/where-to/pull/2))
 - Exceptions to recurring appointments not shown ([#6](https://github.com/blairconrad/where-to/pull/6))
