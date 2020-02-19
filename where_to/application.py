@@ -60,36 +60,32 @@ class Application:
         if not appointments:
             return background
 
-        font_size = 16
-        font = ImageFont.truetype("verdana.ttf", font_size)
+        font = ImageFont.truetype("verdana.ttf", size=16)
 
-        messages = [
-            datetime.datetime.strftime(appointment.Start, "%H:%M") + " " + appointment.Location
-            for appointment in appointments
-        ]
+        message = "\n".join(
+            (
+                datetime.datetime.strftime(appointment.Start, "%H:%M") + " " + appointment.Location
+                for appointment in appointments
+            )
+        )
 
         draw = ImageDraw.Draw(background)
-        sizes = [draw.textsize(message, font=font) for message in messages]
-
-        max_width = max((size[0] for size in sizes))
-        total_height = sum((size[1] for size in sizes))
+        message_size = draw.textsize(message, font)
 
         if self.config.background_image:
-            overlay = Image.new("RGBA", (max_width, total_height), "#00000080")
+            overlay = Image.new("RGBA", message_size, "#00000080")
             mask = overlay
             font_color = "white"
         else:
-            overlay = Image.new("RGB", (max_width, total_height), self.config.background_color)
+            overlay = Image.new("RGB", message_size, self.config.background_color)
             mask = None
             font_color = image.get_font_color_from_pixel(overlay.getpixel((0, 0)))
 
         draw = ImageDraw.Draw(overlay)
 
         pos = (0, 0)
-        for index in range(len(messages)):
-            draw.text(pos, messages[index], font=font, fill=font_color)
-            pos = (pos[0], pos[1] + sizes[index][1])
+        draw.text(pos, message, font=font, fill=font_color)
 
-        background.paste(overlay, (background.size[0] - max_width, 0), mask)
+        background.paste(overlay, (background.size[0] - message_size[0], 0), mask)
 
         return background
