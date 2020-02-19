@@ -22,7 +22,7 @@ class Application:
                 print("No appointments found!")
 
             for appointment in appointments:
-                print(appointment.Start, appointment.Subject, appointment.Location)
+                print(appointment.Start, appointment.Location)
         else:
             lock_size = lock_screen.get_best_size()
             bottom_layer = image.create_background(

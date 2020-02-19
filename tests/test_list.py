@@ -6,9 +6,7 @@ from .helpers import console
 
 def test_upcoming_appointments_are_sorted(config, mocker, capsys):
     expected_output = console(
-        "2020-02-20 08:30:00 [Subject] [Location]",
-        "2020-02-20 10:30:00 [Subject] [Location]",
-        "2020-02-20 12:00:00 [Subject] [Location]",
+        "2020-02-20 08:30:00 [Location]", "2020-02-20 10:30:00 [Location]", "2020-02-20 12:00:00 [Location]"
     )
     found_appointments = [
         Appointment(start="2020-02-20 12:00"),
@@ -25,7 +23,7 @@ def test_upcoming_appointments_are_sorted(config, mocker, capsys):
 
 
 def test_next_appointment_shows_next_only(config, mocker, capsys):
-    expected_output = console("2020-02-20 12:00:00 [Subject] [Location]")
+    expected_output = console("2020-02-20 12:00:00 [Location]")
 
     found_appointments = [
         Appointment(start="2020-02-20 12:00"),
@@ -44,7 +42,7 @@ def test_next_appointment_shows_next_only(config, mocker, capsys):
 
 
 def test_next_appointment_shows_next_only_even_when_results_not_sorted(config, mocker, capsys):
-    expected_output = console("2020-02-20 12:00:00 [Subject] [Location]")
+    expected_output = console("2020-02-20 12:00:00 [Location]")
 
     found_appointments = [
         Appointment(start="2020-02-20 13:30"),
@@ -63,7 +61,7 @@ def test_next_appointment_shows_next_only_even_when_results_not_sorted(config, m
 
 
 def test_next_appointment_shows_multiple_with_same_start(config, mocker, capsys):
-    expected_output = console("2020-02-20 08:30:00 [Subject] [Location]", "2020-02-20 08:30:00 [Subject] [Location]")
+    expected_output = console("2020-02-20 08:30:00 [Location]", "2020-02-20 08:30:00 [Location]")
 
     found_appointments = [
         Appointment(start="2020-02-20 08:30"),
