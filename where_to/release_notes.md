@@ -1,3 +1,6 @@
+### Changed
+- Stop displaying subject in list mode ([#10](https://github.com/blairconrad/where-to/pull/10))
+
 ### Fixed
 - Today's recurring appointments not found when run before 00:15 ([#5](https://github.com/blairconrad/where-to/pull/5))
 
