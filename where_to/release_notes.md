@@ -1,3 +1,7 @@
+### Fixed
+- Today's recurring appointments not found when run before 00:15 ([#5](https://github.com/blairconrad/where-to/pull/5))
+
+
 ## 0.3.1
 
 ### Fixed
