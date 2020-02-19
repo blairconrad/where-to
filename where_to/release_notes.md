@@ -3,6 +3,7 @@
 
 ### Fixed
 - Today's recurring appointments not found when run before 00:15 ([#5](https://github.com/blairconrad/where-to/pull/5))
+- Duplicates shown when recurring appointment has an exception but for the original day ([#11](https://github.com/blairconrad/where-to/pull/11))
 
 
 ## 0.3.1
