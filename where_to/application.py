@@ -32,6 +32,14 @@ class Application:
             lock_screen.show(lock_image)
 
     def find_appointments(self):
+        def distinct(appointments):
+            result = []
+            for appointment in appointments:
+                if result and result[-1].Start == appointment.Start and result[-1].Location == appointment.Location:
+                    continue
+                result.append(appointment)
+            return result
+
         earliest_meeting_start = self.now + datetime.timedelta(minutes=-10)
         latest_meeting_start = datetime.datetime(
             year=self.now.year, month=self.now.month, day=self.now.day
@@ -41,7 +49,7 @@ class Application:
             latest_meeting_start = self.now + datetime.timedelta(minutes=15)
 
         appointments = outlook.find_appointments_between(earliest_meeting_start, latest_meeting_start)
-        appointments = sorted(appointments, key=lambda a: a.Start)
+        appointments = distinct(sorted(appointments, key=lambda a: a.Start))
 
         if self.config.which == "next":
             appointments = [a for a in appointments if a.Start == appointments[0].Start]

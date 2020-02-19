@@ -61,7 +61,26 @@ def test_next_appointment_shows_next_only_even_when_results_not_sorted(config, m
 
 
 def test_next_appointment_shows_multiple_with_same_start(config, mocker, capsys):
-    expected_output = console("2020-02-20 08:30:00 [Location]", "2020-02-20 08:30:00 [Location]")
+    expected_output = console("2020-02-20 08:30:00 Location 1", "2020-02-20 08:30:00 Location 2")
+
+    found_appointments = [
+        Appointment(start="2020-02-20 08:30", location="Location 1"),
+        Appointment(start="2020-02-20 08:30", location="Location 2"),
+        Appointment(start="2020-02-20 12:00"),
+    ]
+    mocker.patch("where_to.outlook.find_appointments_between", return_value=found_appointments)
+
+    config.which = "next"
+    application = Application(config)
+
+    application.run()
+
+    captured = capsys.readouterr()
+    assert expected_output == captured.out
+
+
+def test_duplicate_appointments_are_culled(config, mocker, capsys):
+    expected_output = console("2020-02-20 08:30:00 [Location]", "2020-02-20 12:00:00 [Location]")
 
     found_appointments = [
         Appointment(start="2020-02-20 08:30"),
@@ -70,7 +89,6 @@ def test_next_appointment_shows_multiple_with_same_start(config, mocker, capsys)
     ]
     mocker.patch("where_to.outlook.find_appointments_between", return_value=found_appointments)
 
-    config.which = "next"
     application = Application(config)
 
     application.run()
