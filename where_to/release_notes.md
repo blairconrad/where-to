@@ -1,3 +1,5 @@
+## 0.4.0
+
 ### Changed
 - Stop displaying subject in list mode ([#10](https://github.com/blairconrad/where-to/pull/10))
 
