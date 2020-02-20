@@ -52,6 +52,30 @@ def test_single_appointment_checkered_background_writes_white_on_smoke(config, m
     application.run()
 
 
+def test_single_appointment_light_checkered_background_writes_black(config, mocker, request):
+    found_appointments = [Appointment(start="2020-02-20 12:00")]
+    mocker.patch("where_to.outlook.find_appointments_between", return_value=found_appointments)
+
+    config.background_image = os.path.abspath(
+        os.path.join(os.path.dirname(request.fspath), "backgrounds", "yellow_and_white_checkered.png")
+    )
+    application = Application(config)
+
+    application.run()
+
+
+def test_single_appointment_dark_checkered_background_writes_white(config, mocker, request):
+    found_appointments = [Appointment(start="2020-02-20 12:00")]
+    mocker.patch("where_to.outlook.find_appointments_between", return_value=found_appointments)
+
+    config.background_image = os.path.abspath(
+        os.path.join(os.path.dirname(request.fspath), "backgrounds", "black_and_navy_checkered.png")
+    )
+    application = Application(config)
+
+    application.run()
+
+
 class CompareImage:
     def __init__(self, request):
         self.image_base = request.node.name
@@ -59,6 +83,14 @@ class CompareImage:
         self.test_output_dir = os.path.abspath(os.path.join(self.test_dir, "..", "test_output"))
 
     def __call__(self, lock_image):
+        actual_path = os.path.join(self.test_output_dir, self.image_base + ".actual.png")
+        difference_path = os.path.join(self.test_output_dir, self.image_base + ".difference.png")
+
+        if os.path.exists(actual_path):
+            os.remove(actual_path)
+        if os.path.exists(difference_path):
+            os.remove(difference_path)
+
         expected_path = os.path.join(self.test_dir, "expected", self.image_base + ".png")
         expected_image = Image.open(expected_path)
 
@@ -66,8 +98,6 @@ class CompareImage:
 
         if difference.getbbox() is not None:
             Path(self.test_output_dir).mkdir(parents=True, exist_ok=True)
-            actual_path = os.path.join(self.test_output_dir, self.image_base + ".actual.png")
-            difference_path = os.path.join(self.test_output_dir, self.image_base + ".difference.png")
 
             lock_image.save(actual_path)
             difference.save(difference_path)

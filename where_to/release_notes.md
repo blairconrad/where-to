@@ -3,6 +3,10 @@
 ### Changed
 - Stop displaying subject in list mode ([#10](https://github.com/blairconrad/where-to/pull/10))
 
+### New
+- Omit cartouche when background is relatively uniform
+  ([#14](https://github.com/blairconrad/where-to/pull/14))
+
 ### Fixed
 - Today's recurring appointments not found when run before 00:15 ([#5](https://github.com/blairconrad/where-to/pull/5))
 - Duplicates shown when recurring appointment has an exception but for the original day ([#11](https://github.com/blairconrad/where-to/pull/11))

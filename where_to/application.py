@@ -60,36 +60,30 @@ class Application:
         if not appointments:
             return background
 
-        font_size = 16
-        font = ImageFont.truetype("verdana.ttf", font_size)
+        font = ImageFont.truetype("verdana.ttf", size=16)
 
-        messages = [
-            datetime.datetime.strftime(appointment.Start, "%H:%M") + " " + appointment.Location
-            for appointment in appointments
-        ]
+        message = "\n".join(
+            (
+                datetime.datetime.strftime(appointment.Start, "%H:%M") + " " + appointment.Location
+                for appointment in appointments
+            )
+        )
 
         draw = ImageDraw.Draw(background)
-        sizes = [draw.textsize(message, font=font) for message in messages]
+        message_size = draw.textsize(message, font)
 
-        max_width = max((size[0] for size in sizes))
-        total_height = sum((size[1] for size in sizes))
+        font_color = image.get_best_font_color(
+            background, (background.size[0] - message_size[0], 0, background.size[0], message_size[1])
+        )
 
-        if self.config.background_image:
-            overlay = Image.new("RGBA", (max_width, total_height), "#00000080")
-            mask = overlay
-            font_color = "white"
+        text_position = (background.size[0] - message_size[0], 0)
+        if font_color is None:
+            overlay = Image.new("RGBA", message_size, "#00000080")
+            draw = ImageDraw.Draw(overlay)
+            draw.text((0, 0), message, font=font, fill="white")
+            background.paste(overlay, text_position, overlay)
         else:
-            overlay = Image.new("RGB", (max_width, total_height), self.config.background_color)
-            mask = None
-            font_color = image.get_font_color_from_pixel(overlay.getpixel((0, 0)))
-
-        draw = ImageDraw.Draw(overlay)
-
-        pos = (0, 0)
-        for index in range(len(messages)):
-            draw.text(pos, messages[index], font=font, fill=font_color)
-            pos = (pos[0], pos[1] + sizes[index][1])
-
-        background.paste(overlay, (background.size[0] - max_width, 0), mask)
+            draw = ImageDraw.Draw(background)
+            draw.text(text_position, message, font=font, fill=font_color)
 
         return background
