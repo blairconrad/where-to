@@ -32,13 +32,22 @@ def resize_to_fit(image, container_size):
         return image.resize((container_size[0], int(container_size[0] * image.size[1] / image.size[0])), Image.BILINEAR)
 
 
-def get_font_color_from_pixel(background_color):
-    rgb = [c / 0xFF for c in background_color]
-    hsv = colorsys.rgb_to_hsv(*rgb)
-    h = hsv[0] + 0.5 if hsv[0] < 0.5 else hsv[0] - 0.5
-    s = hsv[1]
-    v = 1 if hsv[2] <= 0.5 else 0
+def get_best_font_color(image, region):
+    def get_lightness_from_pixel(image, x, y):
+        rgb = [c / 0xFF for c in image.getpixel((x, y))]
+        return colorsys.rgb_to_hls(*rgb)[1]
 
-    rgb = colorsys.hsv_to_rgb(h, s, v)
-    rgb = "#" + hex(int(0xFF * rgb[0]))[2:] + hex(int(0xFF * rgb[1]))[2:] + hex(int(0xFF * rgb[2]))[2:]
-    return rgb
+    values = (
+        get_lightness_from_pixel(image, x, y) for x in range(region[0], region[2]) for y in range(region[1], region[3])
+    )
+    first = next(values)
+    if first < 0.5:
+        for value in values:
+            if value >= 0.5:
+                return None
+        return "white"
+    else:
+        for value in values:
+            if value < 0.5:
+                return None
+        return "black"

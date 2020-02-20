@@ -72,20 +72,18 @@ class Application:
         draw = ImageDraw.Draw(background)
         message_size = draw.textsize(message, font)
 
-        if self.config.background_image:
+        font_color = image.get_best_font_color(
+            background, (background.size[0] - message_size[0], 0, background.size[0], message_size[1])
+        )
+
+        text_position = (background.size[0] - message_size[0], 0)
+        if font_color is None:
             overlay = Image.new("RGBA", message_size, "#00000080")
-            mask = overlay
-            font_color = "white"
+            draw = ImageDraw.Draw(overlay)
+            draw.text((0, 0), message, font=font, fill="white")
+            background.paste(overlay, text_position, overlay)
         else:
-            overlay = Image.new("RGB", message_size, self.config.background_color)
-            mask = None
-            font_color = image.get_font_color_from_pixel(overlay.getpixel((0, 0)))
-
-        draw = ImageDraw.Draw(overlay)
-
-        pos = (0, 0)
-        draw.text(pos, message, font=font, fill=font_color)
-
-        background.paste(overlay, (background.size[0] - message_size[0], 0), mask)
+            draw = ImageDraw.Draw(background)
+            draw.text(text_position, message, font=font, fill=font_color)
 
         return background
