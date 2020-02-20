@@ -3,6 +3,8 @@
 /test_output/
 /where_to.egg-info/
 
+/.vscode/.ropeproject/objectdb
+
 .pytest_cache/
 
 *.pyc
