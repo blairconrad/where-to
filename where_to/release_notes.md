@@ -1,3 +1,5 @@
+## 0.5.0
+
 ### New
 - Omit cartouche when background is relatively uniform
   ([#14](https://github.com/blairconrad/where-to/pull/14))
